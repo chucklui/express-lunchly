@@ -17,6 +17,16 @@ class Reservation {
     this.notes = notes;
   }
 
+  get numGuests() {
+    return this._numGuests;
+  }
+
+  set numGuests(val) {
+    if(val < 1){
+      throw new Error("Number of people must be greater than 0");
+    }
+    return this._numGuests = val;
+  }
   /** formatter for startAt */
 
   getFormattedStartAt() {
