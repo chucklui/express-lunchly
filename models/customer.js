@@ -119,6 +119,25 @@ class Customer {
   fullName() {
     return `${this.firstName} ${this.lastName}`;
   }
+
+  //make separate queries: customers, reservations
+  static async bestCustomers(){
+    const results = await db.query(
+      `SELECT id,
+          first_name,
+          last_name,
+          phone,
+          notes,
+          count(*) as resCount
+      FROM customers
+      JOIN reservations
+      ON reservations.customer_id = customers.id
+      GROUP BY id, first_name, last_name
+      ORDER BY resCount DESC
+      LIMIT 10`
+  };
+    const customers = results.rows;
+    return customers.map(c => new Customer(c));
 }
 
 module.exports = Customer;
