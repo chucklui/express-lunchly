@@ -136,10 +136,36 @@ class Customer {
       ORDER BY resCount DESC
       LIMIT 10
       `);
-    
+
     const customers = results.rows;
-    let temp = customers.map(c => new Customer(c));
-    return temp;
+    return customers.map(c => new Customer(c));
+
+    //Another Approach:
+    // const resResults = await db.query(
+    //   `SELECT customer_id AS "customerId", COUNT(*) as resCount
+    //   FROM reservations
+    //   GROUP BY customer_id
+    //   ORDER BY resCount DESC
+    //   LIMIT 10
+    //   `
+    // );
+
+    // //an array of customer ids with many reserv...
+    // const bestCustomerIds = resResults.rows.map(e => e.customerId);
+
+    // const customerResults = await db.query(
+    //   `SELECT  id,
+    //          first_name AS "firstName",
+    //          last_name AS "lastName",
+    //          phone,
+    //          notes
+    //    FROM customers
+    //    WHERE id = ANY($1)`,
+    //    [bestCustomerIds]
+    // );
+
+    // const customers = customerResults.rows;
+    // return customers.map(c => new Customer(c));
   };
 }
 
