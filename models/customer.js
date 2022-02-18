@@ -123,21 +123,24 @@ class Customer {
   //make separate queries: customers, reservations
   static async bestCustomers(){
     const results = await db.query(
-      `SELECT id,
-          first_name,
-          last_name,
-          phone,
-          notes,
+      `SELECT customers.id,
+          customers.first_name AS "firstName",
+          customers.last_name AS "lastName",
+          customers.phone,
+          customers.notes,
           count(*) as resCount
       FROM customers
       JOIN reservations
       ON reservations.customer_id = customers.id
-      GROUP BY id, first_name, last_name
+      GROUP BY customers.id
       ORDER BY resCount DESC
-      LIMIT 10`
-  };
+      LIMIT 10
+      `);
+    
     const customers = results.rows;
-    return customers.map(c => new Customer(c));
+    let temp = customers.map(c => new Customer(c));
+    return temp;
+  };
 }
 
 module.exports = Customer;
