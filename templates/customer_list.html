@@ -6,6 +6,13 @@
 
   <h1>Customers</h1>
 
+  {% if noneFound %}
+  <ul style="column-count: 4">
+    <li>
+      {{ noneFound }}
+    </li>
+  </ul>
+  {% endif %}
   <ul style="column-count: 4">
     {% for customer in customers %}
       <li>

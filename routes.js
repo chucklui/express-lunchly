@@ -16,6 +16,26 @@ router.get("/", async function (req, res, next) {
   return res.render("customer_list.html", { customers });
 });
 
+/** Search results for customer */
+router.get("/search", async function (req, res, next) {
+  const names = req.query.search.split(" ");
+
+  const firstName = names[0], lastName = names[1];
+
+  //console.log("firstName", firstName);
+  //console.log("lastName", lastName);
+
+  const customers = await Customer.search(firstName, lastName);
+
+  if(customers){
+    return res.render("customer_list.html", { customers });
+  }
+  else{
+    const noneFound = `No customer of name ${firstName} ${lastName}`;
+    return res.render("customer_list.html", { noneFound });
+  }
+});
+
 /** Form to add a new customer. */
 
 router.get("/add/", async function (req, res, next) {
