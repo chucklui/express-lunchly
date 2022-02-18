@@ -69,11 +69,11 @@ class Customer {
       [firstName, lastName],
     );
 
-    console.log("results", results);
+    //console.log("results", results);
 
     const customers = results.rows;
 
-    console.log("customers", customers);
+    //console.log("customers", customers);
     if (!customers[0]) {
       return false;
     }
@@ -116,7 +116,7 @@ class Customer {
     }
   }
 
-  get fullName() {
+  fullName() {
     return `${this.firstName} ${this.lastName}`;
   }
 
@@ -137,6 +137,8 @@ class Customer {
       LIMIT 10
       `);
 
+      //{id, firstName, lastName ... resCount} => map(Customer(id, firstName ... resCount)) => [Customers]
+
     const customers = results.rows;
     return customers.map(c => new Customer(c));
 
@@ -149,18 +151,19 @@ class Customer {
     //   LIMIT 10
     //   `
     // );
-
+      //{ customer_id, count } => [customerIds]
+      //{ id, firstName, lastName...} => map => [Customers]
     // //an array of customer ids with many reserv...
     // const bestCustomerIds = resResults.rows.map(e => e.customerId);
 
     // const customerResults = await db.query(
-    //   `SELECT  id,
-    //          first_name AS "firstName",
-    //          last_name AS "lastName",
-    //          phone,
-    //          notes
-    //    FROM customers
-    //    WHERE id = ANY($1)`,
+      // `SELECT  id,
+      //        first_name AS "firstName",
+      //        last_name AS "lastName",
+      //        phone,
+      //        notes
+      //  FROM customers
+      //  WHERE id = ANY($1)`,
     //    [bestCustomerIds]
     // );
 
