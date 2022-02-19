@@ -116,7 +116,7 @@ class Customer {
     }
   }
 
-  fullName() {
+  get fullName() {
     return `${this.firstName} ${this.lastName}`;
   }
 
@@ -130,7 +130,7 @@ class Customer {
           customers.notes,
           count(*) as resCount
       FROM customers
-      JOIN reservations
+      FULL JOIN reservations
       ON reservations.customer_id = customers.id
       GROUP BY customers.id
       ORDER BY resCount DESC
