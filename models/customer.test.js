@@ -54,16 +54,18 @@ describe("Test static Customer methods", function () {
     test("test get()", async function() {
         expect(await Customer.get(testCustomer.id)).toEqual(testCustomer);
         expect(await Customer.get(testCustomer.id)).toBeInstanceOf(Customer);
+        expect(await Customer.get("-1")).toThrow(Error);
     });
 
     test("test search()", async function() {
         const {firstName, lastName} = testCustomer;
 
         expect(await Customer.search(firstName, lastName)).toEqual([testCustomer]);
-        const searchResults = await Customer.search(firstName, lastName);
+        let searchResults = await Customer.search(firstName, lastName);
         expect(searchResults).toBeInstanceOf(Array);
         expect(searchResults[0]).toBeInstanceOf(Customer);
-
+        searchResults = await Customer.search("bad", "data");
+        expect(searchResults).toEqual(false);
     });
 
     test("test bestCustomers()", async function(){
@@ -84,7 +86,7 @@ describe("Test regular methods on Customer instance", function () {
         expect(allResults[0]).toBeInstanceOf(Reservation);
     });
 
-    test("test save()", async function(){
+    test("test save() branch 1", async function(){
         //pass in the data to make an instance of Customer
         let customer = new Customer(goodData);
         //create a new record and save into db
@@ -98,6 +100,21 @@ describe("Test regular methods on Customer instance", function () {
         );
         const dbCustomer = new Customer(result.rows[0]);
         expect(customer).toEqual(dbCustomer);
+    });
+
+    test("test save() branch 2", async function(){
+        testCustomer.firstName = "updated";
+        await testCustomer.save();
+
+        const result = await db.query(
+            `SELECT id, first_name as "firstName", last_name as "lastName", phone, notes
+            FROM customers
+            WHERE id = $1`,
+            [testCustomer.id]
+        );
+        const dbCustomer = new Customer(result.rows[0]);
+
+        expect(testCustomer.firstName).toEqual(dbCustomer.firstName);
     });
 
     test("test fullName()", async function(){
